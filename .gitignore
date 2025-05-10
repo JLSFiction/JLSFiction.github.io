@@ -1,0 +1,30 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# JetBrains/WebStorm editor files
+.idea/
+*.iml
+
+# Node.js dependencies (if you use npm/yarn for tools)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build output (if you use a build tool like Vite or Parcel)
+dist/
+build/
+
+# Temporary files
+*.log
+*.tmp
+*.swp
+
+# Environment files (if you add sensitive data later)
+.env
+.env.local
+
+# Local development files
+*.bak
+*.orig
