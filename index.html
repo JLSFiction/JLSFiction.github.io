@@ -27,15 +27,108 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Open+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Merriweather&display=swap" rel="stylesheet">
 </head>
+
 <body>
+<!-- Navigation -->
+<nav class="navbar" aria-label="Main navigation">
+    <div class="nav-container">
+        <a href="/" class="nav-logo">JLS Fiction</a>
+        <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" role="menubar">
+            <li role="none"><a href="/" role="menuitem">Home</a></li>
+            <li role="none"><a href="/about" role="menuitem">About</a></li>
+            <li role="none"><a href="/books" role="menuitem">Books</a></li>
+            <li role="none">
+                <button id="theme-toggle" aria-label="Toggle light/dark mode">
+                    <svg class="sun-icon" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M12 5a7 7 0 100 14 7 7 0 000-14z"/></svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                </button>
+            </li>
+        </ul>
+    </div>
+    <!-- SVG Runestone Border -->
+    <svg class="nav-border" viewBox="0 0 100 10" preserveAspectRatio="none">
+        <path d="M0,5 Q10,0 20,5 T40,5 T60,5 T80,5 T100,5" fill="none" stroke="var(--accent-color)" stroke-width="1"/>
+        <circle cx="10" cy="2" r="1" fill="var(--accent-color)"/>
+        <circle cx="30" cy="2" r="1" fill="var(--accent-color)"/>
+        <circle cx="50" cy="2" r="1" fill="var(--accent-color)"/>
+        <circle cx="70" cy="2" r="1" fill="var(--accent-color)"/>
+        <circle cx="90" cy="2" r="1" fill="var(--accent-color)"/>
+    </svg>
+</nav>
 
-<h1>JLS Fiction... coming soon!</h1>
+<!-- Header with Canvas -->
+<header class="site-header">
+    <canvas id="leaves-canvas" aria-hidden="true"></canvas>
+    <div class="header-content">
+        <h1>JLS Fiction</h1>
+        <p>Tales of Magic and Adventure</p>
+    </div>
+</header>
 
-<ul>
-    <!-- Posts will go here -->
-</ul>
+<!-- Main Content -->
+<main class="content">
+    <section class="article-grid" aria-label="Blog posts">
 
+        <article class="card" style="animation-delay: 0.1s;">
+            <h2>Coming Soon!</h2>
+            <p>Blogs, books, fantasy... and potentially even more!</p>
+        </article>
+
+        <!-- Sample Article Card with Image and Tags -->
+        <!--<article class="card" style="animation-delay: 0.1s;">
+            <img src="images/sample-image.jpg" alt="Eldoria landscape" class="card-image">
+            <h2><a href="/posts/sample-post">A Journey Through Eldoria</a></h2>
+            <p>A tale of courage and destiny in a land of ancient magic...</p>
+            <div class="card-tags">
+                <span class="tag">Worldbuilding</span>
+                <span class="tag">Adventure</span>
+            </div>
+            <time datetime="2025-05-11">May 11, 2025</time>
+        </article>-->
+        <!-- Sample Card without Image -->
+        <!--<article class="card" style="animation-delay: 0.2s;">
+            <h2><a href="/posts/another-post">The Lost Runes</a></h2>
+            <p>Unveiling secrets of an ancient script...</p>
+            <div class="card-tags">
+                <span class="tag">Mystery</span>
+            </div>
+            <time datetime="2025-05-11">May 11, 2025</time>
+        </article>-->
+        <!-- Placeholder for Jekyll loop -->
+        <!-- {% for post in site.posts %}
+        <article class="card" style="animation-delay: {{ forloop.index | times: 0.1 }}s;">
+          {% if post.featured_image %}
+          <img src="{{ post.featured_image }}" alt="{{ post.title }}" class="card-image">
+          {% endif %}
+          <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+          <p>{{ post.excerpt | strip_html | truncate: 100 }}</p>
+          {% if post.categories %}
+          <div class="card-tags">
+            {% for category in post.categories %}
+            <span class="tag">{{ category }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <time datetime="{{ post.date }}">{{ post.date | date: "%B %d, %Y" }}</time>
+        </article>
+        {% endfor %} -->
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <p>© 2025 JLS Fiction. All rights reserved.</p>
+    <ul class="social-links">
+        <li><a href="#">Twitter</a></li>
+        <li><a href="#">Goodreads</a></li>
+    </ul>
+</footer>
+
+<script src="js/scripts.js"></script>
 </body>
 </html>
