@@ -28,3 +28,8 @@ build/
 # Local development files
 *.bak
 *.orig
+
+_site/
+.sass-cache/
+.jekyll-cache/
+vendor/

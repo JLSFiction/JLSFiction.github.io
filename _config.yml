@@ -1,0 +1,29 @@
+title: JLS Fiction
+description: Fantasy novels by J Shrout
+baseurl: ""
+url: "https://jlsfiction.com"
+theme: null
+permalink: /posts/:year/:month/:day/:title/
+markdown: kramdown
+collections:
+  posts:
+    output: true
+    permalink: /posts/:year/:month/:day/:title/
+utterances:
+  repo: "JLSFiction/JLSFiction.github.io"
+  issue-term: "pathname"
+  theme: "github-light"
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
