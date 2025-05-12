@@ -1,17 +1,17 @@
-// Debug: Confirm script and libraries
 console.log('Script loaded');
 console.log('Octokit:', typeof Octokit);
 
-// Initialize Toast UI Editor
 const editor = new toastui.Editor({
     el: document.querySelector('#editor'),
-    height: '400px',
+    height: '600px',
     initialEditType: 'markdown',
-    previewStyle: 'vertical'
+    previewStyle: 'vertical',
+    initialValue: '# Enter your markdown here...',
+    autofocus: true
 });
+editor.focus();
 
-// Simple client-side authentication
-const correctPassword = 'Valinor583'; // Password from generate-hash.js
+const correctPassword = 'Valinor583';
 document.getElementById('auth-button').addEventListener('click', () => {
     console.log('Unlock button clicked');
     const password = document.getElementById('password').value;
@@ -26,7 +26,6 @@ document.getElementById('auth-button').addEventListener('click', () => {
     }
 });
 
-// Form submission
 document.getElementById('post-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     console.log('Form submitted');
@@ -36,24 +35,23 @@ document.getElementById('post-form').addEventListener('submit', async (e) => {
     const imageFile = document.getElementById('image').files[0];
     const date = new Date().toISOString().slice(0, 10);
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    let markdown = `---
-title: ${title}
-date: ${date} 10:00
-categories: [${categories.join(', ')}]
-`;
+    let markdown = '---\n';
+    markdown += 'title: ' + title + '\n';
+    markdown += 'date: ' + date + ' 10:00\n';
+    markdown += 'categories: [' + categories.join(', ') + ']\n';
     if (imageFile) {
-        markdown += `featured_image: /images/${imageFile.name}\n`;
+        markdown += 'featured_image: /images/' + imageFile.name + '\n';
     }
-    markdown += `---
-${content}`;
+    markdown += '---\n';
+    markdown += content;
     const token = prompt('Enter your GitHub Personal Access Token');
     const octokit = new Octokit.Octokit({ auth: token });
     try {
         await octokit.repos.createOrUpdateFileContents({
             owner: 'JLSFiction',
             repo: 'JLSFiction.github.io',
-            path: `_posts/${date}-${slug}.md`,
-            message: `Add post: ${title}`,
+            path: '_posts/' + date + '-' + slug + '.md',
+            message: 'Add post: ' + title,
             content: btoa(unescape(encodeURIComponent(markdown)))
         });
         if (imageFile) {
@@ -63,8 +61,8 @@ ${content}`;
                 await octokit.repos.createOrUpdateFileContents({
                     owner: 'JLSFiction',
                     repo: 'JLSFiction.github.io',
-                    path: `images/${imageFile.name}`,
-                    message: `Add image for post: ${title}`,
+                    path: 'images/' + imageFile.name,
+                    message: 'Add image for post: ' + title,
                     content: imageContent
                 });
                 alert('Post and image submitted successfully!');

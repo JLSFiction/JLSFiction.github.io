@@ -2,7 +2,6 @@
     max-width: 800px;
     margin: 2rem auto;
     padding: 1rem;
-    /*background: var(--parchment-bg); /* Match site’s parchment background */
     border: 1px solid var(--accent-color);
     border-radius: 8px;
 }
@@ -36,5 +35,80 @@ button {
 }
 
 button:hover {
-    background: var(--accent-color);
+    filter: brightness(90%);
+}
+
+/* Toast UI Editor Styles */
+.toastui-editor-defaultUI,
+.toastui-editor-contents,
+.toastui-editor-md-container,
+.toastui-editor-md-tab-container,
+.ProseMirror {
+    color: #2F2F2F !important; /* Dark gray text for light theme */
+    background: #F5E9D4 !important; /* Parchment background */
+    font-family: 'Merriweather', serif !important;
+}
+
+.toastui-editor-contents textarea,
+.toastui-editor-md-container textarea,
+.ProseMirror {
+    color: #2F2F2F !important;
+    caret-color: #2F2F2F !important; /* Visible cursor */
+}
+
+.toastui-editor-md-preview,
+.toastui-editor-ww-container {
+    color: #2F2F2F !important;
+    background: #F5E9D4 !important;
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .toastui-editor-defaultUI,
+[data-theme="dark"] .toastui-editor-contents,
+[data-theme="dark"] .toastui-editor-md-container,
+[data-theme="dark"] .toastui-editor-md-tab-container,
+[data-theme="dark"] .ProseMirror {
+    color: #E8E3D1 !important; /* Parchment text */
+    background: #1A2525 !important; /* Deep teal-gray */
+}
+
+[data-theme="dark"] .toastui-editor-contents textarea,
+[data-theme="dark"] .toastui-editor-md-container textarea,
+[data-theme="dark"] .ProseMirror {
+    color: #E8E3D1 !important;
+    caret-color: #E8E3D1 !important;
+}
+
+[data-theme="dark"] .toastui-editor-md-preview,
+[data-theme="dark"] .toastui-editor-ww-container {
+    color: #E8E3D1 !important;
+    background: #1A2525 !important;
+}
+
+/* Ensure all preview content is visible in dark mode */
+[data-theme="dark"] .toastui-editor-md-preview *,
+[data-theme="dark"] .toastui-editor-md-preview p,
+[data-theme="dark"] .toastui-editor-md-preview h1,
+[data-theme="dark"] .toastui-editor-md-preview h2,
+[data-theme="dark"] .toastui-editor-md-preview h3,
+[data-theme="dark"] .toastui-editor-md-preview ul,
+[data-theme="dark"] .toastui-editor-md-preview ol,
+[data-theme="dark"] .toastui-editor-md-preview li {
+    color: #E8E3D1 !important;
+}
+
+/* Ensure editor visibility and size */
+.toastui-editor-defaultUI {
+    min-height: 600px !important; /* Larger editor window */
+    width: 100% !important;
+}
+
+.toastui-editor-contents {
+    visibility: visible !important;
+    min-height: 500px !important;
+}
+
+/* Ensure preview panel is sized appropriately */
+.toastui-editor-md-preview {
+    min-height: 500px !important;
 }
