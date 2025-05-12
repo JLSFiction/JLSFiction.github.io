@@ -11,7 +11,7 @@ const editor = new toastui.Editor({
 });
 editor.focus();
 
-const correctPassword = 'Valinor583';
+const correctPassword = 'temp123';
 document.getElementById('auth-button').addEventListener('click', () => {
     console.log('Unlock button clicked');
     const password = document.getElementById('password').value;
