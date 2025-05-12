@@ -33,7 +33,12 @@ document.getElementById('post-form').addEventListener('submit', async (e) => {
     const categories = document.getElementById('categories').value.split(',').map(c => c.trim()).filter(c => c);
     const content = editor.getMarkdown();
     const imageFile = document.getElementById('image').files[0];
-    const date = new Date().toISOString().slice(0, 10);
+    const today = new Date();
+    // Format local date as YYYY-MM-DD
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(today.getDate()).padStart(2, '0');
+    const date = `${year}-${month}-${day}`;
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     let markdown = '---\n';
     markdown += 'title: ' + title + '\n';
