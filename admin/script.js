@@ -30,15 +30,14 @@ document.getElementById('post-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     console.log('Form submitted');
     const title = document.getElementById('title').value;
-    const categories = document.getElementById('categories').value.split(',').map(c => c.trim()).filter(c => c);
+    const categories = document.getElementById('categories').value.split(',').map(c => c.trim().toLowerCase()).filter(c => c);
     const content = editor.getMarkdown();
     const imageFile = document.getElementById('image').files[0];
     const today = new Date();
-    // Format local date as YYYY-MM-DD
     const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
-    const date = `${year}-${month}-${day}`;
+    const date = year + '-' + month + '-' + day;
     const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     let markdown = '---\n';
     markdown += 'title: ' + title + '\n';
