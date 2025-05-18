@@ -5,8 +5,8 @@ description: Explore fantasy tales of magic and adventure.
 permalink: /fantasy/
 ---
 <section class="article-grid" aria-label="Fantasy posts">
-    {% for post in site.posts %}
-    {% if post.categories contains 'fantasy' %}
+    {% if site.categories.fantasy.size > 0 %}
+    {% for post in site.categories.fantasy %}
     <article class="card">
         {% if post.featured_image %}
         <img class="card-image" src="{{ post.featured_image }}" alt="{{ post.title }}">
@@ -22,6 +22,8 @@ permalink: /fantasy/
         </div>
         {% endif %}
     </article>
-    {% endif %}
     {% endfor %}
+    {% else %}
+    <p class="no-posts">Check back soon!</p>
+    {% endif %}
 </section>

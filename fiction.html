@@ -5,8 +5,8 @@ description: Dive into captivating fiction stories.
 permalink: /fiction/
 ---
 <section class="article-grid" aria-label="Fiction posts">
-    {% for post in site.posts %}
-    {% if post.categories contains 'fiction' %}
+    {% if site.categories.fiction.size > 0 %}
+    {% for post in site.categories.fiction %}
     <article class="card">
         {% if post.featured_image %}
         <img class="card-image" src="{{ post.featured_image }}" alt="{{ post.title }}">
@@ -22,6 +22,8 @@ permalink: /fiction/
         </div>
         {% endif %}
     </article>
-    {% endif %}
     {% endfor %}
+    {% else %}
+    <p class="no-posts">Check back soon!</p>
+    {% endif %}
 </section>

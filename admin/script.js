@@ -16,8 +16,8 @@ const correctPasswordHash = '$2b$10$1zHwIEj4HxwMmX4/szno2ur5TzEw56lxhiREtSwvw/KG
 document.getElementById('auth-button').addEventListener('click', () => {
     console.log('Unlock button clicked');
     const password = document.getElementById('password').value;
-    console.log('Entered password length:', password.length); // Avoid logging password
-    bcrypt.compare(password, correctPasswordHash, (err, result) => {
+    console.log('Entered password length:', password.length);
+    window.bcrypt.compare(password, correctPasswordHash, (err, result) => {
         if (err) {
             console.error('Bcrypt error:', err);
             alert('Authentication error. Check console.');
@@ -34,15 +34,15 @@ document.getElementById('auth-button').addEventListener('click', () => {
     });
 });
 
-// Check for saved GitHub PAT on page load
+// Check for saved GitHub PAT
 const savedToken = localStorage.getItem('githubPAT');
 if (savedToken) {
-    document.getElementById('save-token').checked = true; // Reflect saved state
+    document.getElementById('save-token').checked = true;
 }
 
 document.getElementById('post-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
     console.log('Form submitted');
+    e.preventDefault();
     const title = document.getElementById('title').value;
     const categories = document.getElementById('categories').value.split(',').map(c => c.trim().toLowerCase()).filter(c => c);
     const content = editor.getMarkdown();
@@ -63,7 +63,6 @@ document.getElementById('post-form').addEventListener('submit', async (e) => {
     markdown += '---\n';
     markdown += content;
 
-    // Get GitHub PAT
     let token = savedToken;
     const saveToken = document.getElementById('save-token').checked;
     if (!token) {
@@ -73,7 +72,6 @@ document.getElementById('post-form').addEventListener('submit', async (e) => {
             return;
         }
     }
-    // Save or clear token based on checkbox
     if (saveToken) {
         localStorage.setItem('githubPAT', token);
     } else {
@@ -101,13 +99,17 @@ document.getElementById('post-form').addEventListener('submit', async (e) => {
                     content: imageContent
                 });
                 alert('Post and image submitted successfully!');
+                e.target.reset();
+                editor.setMarkdown('# Enter your markdown here...');
             };
             reader.readAsDataURL(imageFile);
         } else {
             alert('Post submitted successfully!');
+            e.target.reset();
+            editor.setMarkdown('# Enter your markdown here...');
         }
     } catch (error) {
         console.error('Error committing to GitHub:', error);
-        alert('Failed to submit post. Check console for details.');
+        alert('Failed to submit post. Check console.');
     }
 });

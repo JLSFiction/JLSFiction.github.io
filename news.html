@@ -3,9 +3,9 @@ layout: default
 title: News Posts
 permalink: /news/
 ---
-<section class="article-grid" aria-label="News posts">
-    {% for post in site.posts %}
-    {% if post.categories contains 'news' %}
+<section class="article-grid" aria-label="Fiction posts">
+    {% if site.categories.news.size > 0 %}
+    {% for post in site.categories.news %}
     <article class="card">
         {% if post.featured_image %}
         <img class="card-image" src="{{ post.featured_image }}" alt="{{ post.title }}">
@@ -21,6 +21,8 @@ permalink: /news/
         </div>
         {% endif %}
     </article>
-    {% endif %}
     {% endfor %}
+    {% else %}
+    <p class="no-posts">Check back soon!</p>
+    {% endif %}
 </section>

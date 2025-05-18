@@ -5,8 +5,8 @@ description: Discover science fiction adventures and futuristic worlds.
 permalink: /sci-fi/
 ---
 <section class="article-grid" aria-label="Sci-Fi posts">
-    {% for post in site.posts %}
-    {% if post.categories contains 'sci-fi' %}
+    {% if site.categories['sci-fi'].size > 0 %}
+    {% for post in site.categories['sci-fi'] %}
     <article class="card">
         {% if post.featured_image %}
         <img class="card-image" src="{{ post.featured_image }}" alt="{{ post.title }}">
@@ -22,6 +22,8 @@ permalink: /sci-fi/
         </div>
         {% endif %}
     </article>
-    {% endif %}
     {% endfor %}
+    {% else %}
+    <p class="no-posts">Check back soon!</p>
+    {% endif %}
 </section>
