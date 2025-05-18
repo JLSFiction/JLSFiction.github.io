@@ -326,7 +326,19 @@ h1, h2, h3 {
 .social-links a:hover {
     color: var(--accent-color);
 }
+.social-icon {
+    vertical-align: middle;
+    transition: opacity 0.3s ease;
+    color: #000000; /* Black for light mode (parchment background #F5E9D4) */
+}
 
+[data-theme="dark"] .social-icon {
+    color: #FFFFFF; /* White for dark mode (teal-gray background #1A2525) */
+}
+
+.social-icon:hover {
+    opacity: 0.8; /* Subtle hover effect */
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav-links {
