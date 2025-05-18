@@ -7,7 +7,15 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/admin/toastui-editor.min.css">
     <link rel="stylesheet" href="/admin/admin.css">
+    <script src="/admin/toastui-editor-all.min.js" defer></script>
     <script src="/admin/octokit.min.js" defer></script>
+    <script src="/admin/bcrypt.js"></script>
+    <script>
+        // Shim to alias dcodeIO.bcrypt as bcrypt
+        window.bcrypt = window.dcodeIO ? window.dcodeIO.bcrypt : {};
+        console.log('Shim applied, window.bcrypt:', window.bcrypt);
+    </script>
+    <script src="/admin/script.js" defer></script>
 </head>
 <body>
 <nav class="navbar" aria-label="Main navigation">
@@ -55,6 +63,7 @@
             <div id="editor" role="textbox" aria-label="Markdown editor"></div>
             <label for="image">Featured Image (optional):</label>
             <input type="file" id="image" accept="image/*" aria-label="Upload featured image">
+            <label><input type="checkbox" id="save-token"> Save GitHub Token</label>
             <button type="submit" aria-label="Submit post">Submit Post</button>
         </form>
     </section>
@@ -68,8 +77,6 @@
     </ul>
 </footer>
 
-<script src="/admin/toastui-editor-all.min.js" defer></script>
-<script src="/admin/script.js" defer></script>
 <script src="/js/scripts.js" defer></script>
 </body>
 </html>

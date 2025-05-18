@@ -11,20 +11,34 @@ const editor = new toastui.Editor({
 });
 editor.focus();
 
-const correctPassword = 'temp123';
+const correctPasswordHash = '$2b$10$1zHwIEj4HxwMmX4/szno2ur5TzEw56lxhiREtSwvw/KGsJcI5y7jy';
+
 document.getElementById('auth-button').addEventListener('click', () => {
     console.log('Unlock button clicked');
     const password = document.getElementById('password').value;
-    console.log('Entered password:', password);
-    if (password === correctPassword) {
-        console.log('Password correct');
-        document.getElementById('auth-section').style.display = 'none';
-        document.getElementById('post-form').style.display = 'block';
-    } else {
-        console.log('Password incorrect');
-        alert('Incorrect password');
-    }
+    console.log('Entered password length:', password.length); // Avoid logging password
+    bcrypt.compare(password, correctPasswordHash, (err, result) => {
+        if (err) {
+            console.error('Bcrypt error:', err);
+            alert('Authentication error. Check console.');
+            return;
+        }
+        if (result) {
+            console.log('Password correct');
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('post-form').style.display = 'block';
+        } else {
+            console.log('Password incorrect');
+            alert('Incorrect password');
+        }
+    });
 });
+
+// Check for saved GitHub PAT on page load
+const savedToken = localStorage.getItem('githubPAT');
+if (savedToken) {
+    document.getElementById('save-token').checked = true; // Reflect saved state
+}
 
 document.getElementById('post-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -48,7 +62,24 @@ document.getElementById('post-form').addEventListener('submit', async (e) => {
     }
     markdown += '---\n';
     markdown += content;
-    const token = prompt('Enter your GitHub Personal Access Token');
+
+    // Get GitHub PAT
+    let token = savedToken;
+    const saveToken = document.getElementById('save-token').checked;
+    if (!token) {
+        token = prompt('Enter your GitHub Personal Access Token');
+        if (!token) {
+            alert('GitHub token required.');
+            return;
+        }
+    }
+    // Save or clear token based on checkbox
+    if (saveToken) {
+        localStorage.setItem('githubPAT', token);
+    } else {
+        localStorage.removeItem('githubPAT');
+    }
+
     const octokit = new Octokit.Octokit({ auth: token });
     try {
         await octokit.repos.createOrUpdateFileContents({

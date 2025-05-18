@@ -112,3 +112,15 @@ button:hover {
 .toastui-editor-md-preview {
     min-height: 500px !important;
 }
+
+#save-token {
+    margin-right: 0.5em;
+    vertical-align: middle;
+}
+label[for="save-token"] {
+    font-size: 1rem;
+    color: var(--text-color);
+    display: inline-flex;
+    align-items: center;
+    margin-top: 1em;
+}
