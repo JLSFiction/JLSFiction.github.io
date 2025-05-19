@@ -219,7 +219,7 @@ h1, h2, h3 {
 }
 
 /* Center no-posts message vertically and horizontally */
-.article-grid:has(.no-posts) {
+.article-grid:has(.no-posts), #post-list:has(.no-posts) {
     display: flex;
     justify-content: center;
     align-items: center;

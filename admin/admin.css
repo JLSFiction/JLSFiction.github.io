@@ -108,7 +108,6 @@ button:hover {
     min-height: 500px !important;
 }
 
-/* Ensure preview panel is sized appropriately */
 .toastui-editor-md-preview {
     min-height: 500px !important;
 }
@@ -117,10 +116,108 @@ button:hover {
     margin-right: 0.5em;
     vertical-align: middle;
 }
+
 label[for="save-token"] {
     font-size: 1rem;
     color: var(--text-color);
     display: inline-flex;
     align-items: center;
     margin-top: 1em;
+}
+
+/* Dashboard-specific styles */
+#dashboard {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.dashboard-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    margin: 1rem 0 2rem;
+    text-shadow: 1px 1px 2px var(--shadow);
+    letter-spacing: 1px;
+}
+
+#post-list {
+    margin-top: 20px;
+}
+
+.post-item {
+    border: 1px solid var(--accent-color);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background: var(--background-color);
+}
+
+.post-item h3 {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    font-family: 'Cinzel', serif;
+    color: var(--text-color);
+}
+
+.post-item p {
+    margin: 5px 0;
+    font-family: 'Merriweather', serif;
+    color: var(--text-color);
+}
+
+.post-item button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+}
+
+.post-item button.edit-post {
+    background: var(--accent-color);
+}
+
+.post-item button.delete-post {
+    background: #b22222; /* Red for delete */
+}
+
+.post-item button.delete-post:hover {
+    filter: brightness(85%);
+}
+
+#logout {
+    position: fixed;
+    top: 80px; /* Adjusted to sit below navbar (60px height + padding) */
+    right: 20px;
+    padding: 10px 20px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    cursor: pointer;
+    z-index: 1000; /* Ensure it’s above other content */
+    transition: background 0.2s ease;
+}
+
+#logout:hover {
+    filter: brightness(90%);
+}
+
+#logout:focus {
+    outline: 2px solid var(--text-color);
+    outline-offset: 2px;
+}
+
+/* Theme variables (ensure consistency with styles.css) */
+:root {
+    --background-color: #F5E9D4;
+    --text-color: #2F2F2F;
+    --accent-color: #2A4B2F;
+}
+
+[data-theme="dark"] {
+    --background-color: #1A2525;
+    --text-color: #6B5B95;
+    --accent-color: #6B5B95;
 }
