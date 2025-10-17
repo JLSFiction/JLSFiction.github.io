@@ -55,12 +55,15 @@
     <section class="admin-section" aria-label="Admin dashboard">
         <div id="auth-section">
             <h1>Admin Login</h1>
+            <label for="username">Username:</label>
+            <input type="text" id="username" aria-label="Enter admin username" required>
             <label for="password">Password:</label>
             <input type="password" id="password" aria-label="Enter admin password" required>
             <button id="auth-button" type="button">Unlock</button>
         </div>
         <div id="dashboard" style="display: none;">
             <h1 class="dashboard-title">JLS Fiction Admin Dashboard</h1>
+            <p>Logged in as: <span id="logged-in-user"></span></p>
             <button id="logout" aria-label="Logout">Logout</button>
             <h2>Create New Post</h2>
             <form id="post-form">

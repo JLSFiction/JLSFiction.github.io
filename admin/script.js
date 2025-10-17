@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initialEditType: 'markdown',
         previewStyle: 'vertical',
         initialValue: '# Enter your markdown here...',
-        autofocus: true
+        autofocus: true,
     });
     editor.focus();
 
@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const postList = document.getElementById('post-list');
     const githubTokenInput = document.getElementById('github-token');
     const saveTokenCheckbox = document.getElementById('save-token');
-    const correctPasswordHash = '$2b$10$1zHwIEj4HxwMmX4/szno2ur5TzEw56lxhiREtSwvw/KGsJcI5y7jy';
     const owner = 'JLSFiction';
     const repo = 'JLSFiction.github.io';
     let octokit;
+    let loggedInUser = null; // Track logged-in user
 
     // Load saved GitHub PAT
     const savedToken = localStorage.getItem('githubPAT');
@@ -32,34 +32,60 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Authentication
-    document.getElementById('auth-button').addEventListener('click', () => {
+    document.getElementById('auth-button').addEventListener('click', async () => {
         console.log('Unlock button clicked');
+        const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        console.log('Entered password length:', password.length);
-        window.bcrypt.compare(password, correctPasswordHash, (err, result) => {
-            if (err) {
-                console.error('Bcrypt error:', err);
+        console.log('Entered username:', username, 'password length:', password.length);
+
+        try {
+            const response = await fetch('/admin/data/auth-xyz.json');
+            if (!response.ok) {
+                console.error('Failed to fetch auth-xyz.json:', response.status);
                 alert('Authentication error. Check console.');
                 return;
             }
-            if (result) {
-                console.log('Password correct');
-                authSection.style.display = 'none';
-                dashboard.style.display = 'block';
-                loadPosts();
-            } else {
-                console.log('Password incorrect');
-                alert('Incorrect password');
+            const users = await response.json();
+            const user = users.find((u) => u.username === username);
+
+            if (!user) {
+                console.log('User not found');
+                alert('Invalid username or password');
+                return;
             }
-        });
+
+            window.bcrypt.compare(password, user.password, (err, result) => {
+                if (err) {
+                    console.error('Bcrypt error:', err);
+                    alert('Authentication error. Check console.');
+                    return;
+                }
+                if (result) {
+                    console.log('Login successful for', username);
+                    loggedInUser = username;
+                    document.getElementById('logged-in-user').textContent = username;
+                    authSection.style.display = 'none';
+                    dashboard.style.display = 'block';
+                    loadPosts();
+                } else {
+                    console.log('Password incorrect');
+                    alert('Invalid username or password');
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            alert('Failed to load user data. Check console.');
+        }
     });
 
     // Logout
     document.getElementById('logout').addEventListener('click', () => {
         authSection.style.display = 'block';
         dashboard.style.display = 'none';
+        document.getElementById('username').value = '';
         document.getElementById('password').value = '';
         postList.innerHTML = '';
+        loggedInUser = null;
     });
 
     // Save GitHub token
@@ -78,8 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = document.getElementById('title').value;
         const categories = document.getElementById('categories').value
             .split(',')
-            .map(c => c.trim().toLowerCase())
-            .filter(c => c);
+            .map((c) => c.trim().toLowerCase())
+            .filter((c) => c);
         const content = editor.getMarkdown();
         const imageFile = document.getElementById('image').files[0];
         const githubToken = githubTokenInput.value;
@@ -106,20 +132,23 @@ document.addEventListener('DOMContentLoaded', () => {
             markdown += `title: "${title.replace(/"/g, '\\"')}"\n`;
             markdown += `date: ${date} 10:00\n`;
             markdown += `categories: [${categories.join(', ')}]\n`;
+            markdown += `author: ${loggedInUser}\n`;
             let imagePath = '';
             if (imageFile) {
                 const reader = new FileReader();
-                await new Promise(resolve => {
+                await new Promise((resolve) => {
                     reader.onload = () => {
                         const imageContent = reader.result.split(',')[1];
                         imagePath = `images/${date}-${imageFile.name}`;
-                        octokit.repos.createOrUpdateFileContents({
-                            owner,
-                            repo,
-                            path: imagePath,
-                            message: `Add image for post: ${title}`,
-                            content: imageContent
-                        }).then(() => resolve());
+                        octokit.repos
+                            .createOrUpdateFileContents({
+                                owner,
+                                repo,
+                                path: imagePath,
+                                message: `Add image for post: ${title}`,
+                                content: imageContent,
+                            })
+                            .then(() => resolve());
                     };
                     reader.readAsDataURL(imageFile);
                 });
@@ -128,11 +157,13 @@ document.addEventListener('DOMContentLoaded', () => {
             markdown += '---\n';
             markdown += content;
 
-            const existingFile = isEditing ? await octokit.repos.getContent({
-                owner,
-                repo,
-                path: `_posts/${filename}`
-            }) : null;
+            const existingFile = isEditing
+                ? await octokit.repos.getContent({
+                    owner,
+                    repo,
+                    path: `_posts/${filename}`,
+                })
+                : null;
 
             await octokit.repos.createOrUpdateFileContents({
                 owner,
@@ -140,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 path: `_posts/${filename}`,
                 message: isEditing ? `Update post: ${title}` : `Add post: ${title}`,
                 content: btoa(unescape(encodeURIComponent(markdown))),
-                sha: existingFile ? existingFile.data.sha : undefined
+                sha: existingFile ? existingFile.data.sha : undefined,
             });
 
             alert(isEditing ? 'Post updated successfully!' : 'Post submitted successfully!');
@@ -163,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await octokit.repos.getContent({
                 owner,
                 repo,
-                path: '_posts'
+                path: '_posts',
             });
             postList.innerHTML = '';
             const posts = Array.isArray(response.data) ? response.data : [];
@@ -171,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 postList.innerHTML = '<p class="no-posts" role="alert">No posts found.</p>';
                 return;
             }
-            posts.forEach(file => {
+            posts.forEach((file) => {
                 fetchPostContent(file.name);
             });
         } catch (error) {
@@ -186,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await octokit.repos.getContent({
                 owner,
                 repo,
-                path: `_posts/${filename}`
+                path: `_posts/${filename}`,
             });
             const content = atob(response.data.content);
             const frontMatterMatch = content.match(/---\n([\s\S]*?)\n---\n([\s\S]*)/);
@@ -196,22 +227,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const titleMatch = frontMatter.match(/title: "([^"]+)"/) || frontMatter.match(/title: ([^\n]+)/);
             const dateMatch = frontMatter.match(/date: (\S+)/);
             const categoriesMatch = frontMatter.match(/categories: \[([^\]]*)\]/);
+            const authorMatch = frontMatter.match(/author: ([^\n]+)/);
             const title = titleMatch ? titleMatch[1] : 'Untitled';
             const date = dateMatch ? dateMatch[1] : 'Unknown';
-            const categories = categoriesMatch ? categoriesMatch[1].split(', ').map(cat => cat.trim()) : [];
+            const categories = categoriesMatch ? categoriesMatch[1].split(', ').map((cat) => cat.trim()) : [];
+            const author = authorMatch ? authorMatch[1] : 'Unknown';
 
             const postDiv = document.createElement('div');
             postDiv.className = 'post-item';
             postDiv.innerHTML = `
-                <h3>${title}</h3>
-                <p>Date: ${date}</p>
-                <p>Categories: ${categories.join(', ') || 'None'}</p>
-                <button class="edit-post" data-filename="${filename}" data-title="${title}" 
-                        data-categories="${categories.join(', ')}" data-content="${encodeURIComponent(markdown)}">
-                    Edit
-                </button>
-                <button class="delete-post" data-filename="${filename}">Delete</button>
-            `;
+        <h3>${title}</h3>
+        <p>Date: ${date}</p>
+        <p>Author: ${author}</p>
+        <p>Categories: ${categories.join(', ') || 'None'}</p>
+        <button class="edit-post" data-filename="${filename}" data-title="${title}" 
+                data-categories="${categories.join(', ')}" data-content="${encodeURIComponent(markdown)}">
+          Edit
+        </button>
+        <button class="delete-post" data-filename="${filename}">Delete</button>
+      `;
             postList.appendChild(postDiv);
         } catch (error) {
             console.error('Error fetching post:', error);
@@ -244,14 +278,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const file = await octokit.repos.getContent({
                     owner,
                     repo,
-                    path: `_posts/${filename}`
+                    path: `_posts/${filename}`,
                 });
                 await octokit.repos.deleteFile({
                     owner,
                     repo,
                     path: `_posts/${filename}`,
                     message: `Delete post: ${filename}`,
-                    sha: file.data.sha
+                    sha: file.data.sha,
                 });
                 alert('Post deleted successfully!');
                 loadPosts();
