@@ -2,16 +2,6 @@ console.log('Script loaded');
 console.log('Octokit:', typeof Octokit);
 
 document.addEventListener('DOMContentLoaded', () => {
-    const editor = new toastui.Editor({
-        el: document.querySelector('#editor'),
-        height: '600px',
-        initialEditType: 'markdown',
-        previewStyle: 'vertical',
-        initialValue: '# Enter your markdown here...',
-        autofocus: true,
-    });
-    editor.focus();
-
     const authSection = document.getElementById('auth-section');
     const dashboard = document.getElementById('dashboard');
     const postForm = document.getElementById('post-form');
@@ -21,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const owner = 'JLSFiction';
     const repo = 'JLSFiction.github.io';
     let octokit;
-    let loggedInUser = null; // Track logged-in user
+    let loggedInUser = null;
 
     // Load saved GitHub PAT
     const savedToken = localStorage.getItem('githubPAT');
@@ -78,6 +68,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Initialize ToastUI Editor (moved after authentication to avoid blocking)
+    let editor;
+    try {
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        editor = new toastui.Editor({
+            el: document.querySelector('#editor'),
+            height: isMobile ? '300px' : '600px',
+            initialEditType: 'markdown',
+            previewStyle: isMobile ? 'tab' : 'vertical',
+            initialValue: '# Enter your markdown here...',
+            autofocus: true,
+        });
+        editor.focus();
+    } catch (error) {
+        console.error('Error initializing ToastUI Editor:', error);
+        alert('Editor failed to load. You can still manage posts. Check console.');
+    }
+
     // Logout
     document.getElementById('logout').addEventListener('click', () => {
         authSection.style.display = 'block';
@@ -106,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .split(',')
             .map((c) => c.trim().toLowerCase())
             .filter((c) => c);
-        const content = editor.getMarkdown();
+        const content = editor ? editor.getMarkdown() : document.getElementById('editor').value;
         const imageFile = document.getElementById('image').files[0];
         const githubToken = githubTokenInput.value;
         const isEditing = postForm.dataset.editing;
@@ -176,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             alert(isEditing ? 'Post updated successfully!' : 'Post submitted successfully!');
             e.target.reset();
-            editor.setMarkdown('# Enter your markdown here...');
+            if (editor) editor.setMarkdown('# Enter your markdown here...');
             delete postForm.dataset.editing;
             delete postForm.dataset.filename;
             document.querySelector('button[type="submit"]').textContent = 'Submit Post';
@@ -261,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const content = decodeURIComponent(e.target.dataset.content);
             document.getElementById('title').value = title;
             document.getElementById('categories').value = categories;
-            editor.setMarkdown(content);
+            if (editor) editor.setMarkdown(content);
             postForm.dataset.editing = 'true';
             postForm.dataset.filename = filename;
             document.querySelector('button[type="submit"]').textContent = 'Update Post';
